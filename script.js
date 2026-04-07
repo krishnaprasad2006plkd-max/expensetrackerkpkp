@@ -2,7 +2,7 @@
 // CONFIGURATION - REPLACE WITH YOUR URL
 // ============================================
 
-const API_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID_HERE/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbylS_rBOHlgX5wI0_QCMWErOsAHt0eEiBiQHs0NbK97e7Wdawd4-Usg6r15q10-W3dwsg/exec';
 
 // ============================================
 // STATE MANAGEMENT
