@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Personal Expense Tracker - Track your income and expenses">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>My Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-container">
+            <!-- Left Side - Branding -->
+            <div class="auth-branding">
+                <div class="branding-content">
+                    <div class="brand-logo">💰</div>
+                    <h1>Expense Tracker</h1>
+                    <p>Take control of your finances. Track income, expenses, and savings all in one place.</p>
+                    <div class="brand-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Visual Analytics</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">☁️</span>
+                            <span>Cloud Sync</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📱</span>
+                            <span>Access Anywhere</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔒</span>
+                            <span>Secure & Private</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Auth Forms -->
+            <div class="auth-forms">
+                <!-- Login Form -->
+                <div class="auth-form" id="loginForm">
+                    <div class="form-header">
+                        <h2>Welcome Back!</h2>
+                        <p>Sign in to access your expense data</p>
+                    </div>
+                    
+                    <div class="form-body">
+                        <div class="input-group">
+                            <label for="loginEmail">Email Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📧</span>
+                                <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary auth-btn" onclick="handleLogin()">
+                            Sign In
+                        </button>
+                        
+                        <div class="auth-footer">
+                            <p>Don't have an account? <a href="#" onclick="showRegisterForm(); return false;">Create Account</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="form-header">
+                        <h2>Create Account</h2>
+                        <p>Start tracking your expenses today</p>
+                    </div>
+                    
+                    <div class="form-body">
+                        <div class="input-group">
+                            <label for="registerName">Full Name</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="registerName" placeholder="John Doe" required>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="registerEmail">Email Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📧</span>
+                                <input type="email" id="registerEmail" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="registerPassword">Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="registerPassword" placeholder="Create a password" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('registerPassword', this)">👁️</button>
+                            </div>
+                            <span class="input-hint">At least 6 characters</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary auth-btn" onclick="handleRegister()">
+                            Create Account
+                        </button>
+                        
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="#" onclick="showLoginForm(); return false;">Sign In</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p id="loadingText">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Offline Banner -->
+    <div class="offline-banner" id="offlineBanner">
+        📴 You are offline. Changes will sync when you're back online.
+    </div>
+
+    <!-- Sync Status -->
+    <div class="sync-status" id="syncStatus">
+        <span class="sync-icon">🔄</span>
+        <span class="sync-text">Syncing...</span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <!-- Header -->
+        <header class="header">
+            <h1>💰 My Expense Tracker</h1>
+            <p class="subtitle">Track your income and expenses with ease</p>
+            
+            <!-- User Info -->
+            <div class="user-info" id="userInfo">
+                <div class="user-details">
+                    <span class="user-avatar" id="userAvatar">J</span>
+                    <div class="user-text">
+                        <span class="user-name" id="userName">John Doe</span>
+                        <span class="user-email" id="userEmail">john@email.com</span>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <button class="sync-btn" onclick="manualSync()" title="Sync Now">🔄</button>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="summary">
+            <div class="summary-card income">
+                <div class="card-icon">📈</div>
+                <div class="card-content">
+                    <h3>Total Income</h3>
+                    <div class="amount" id="totalIncome">₹0.00</div>
+                </div>
+            </div>
+            <div class="summary-card expense">
+                <div class="card-icon">📉</div>
+                <div class="card-content">
+                    <h3>Total Expenses</h3>
+                    <div class="amount" id="totalExpense">₹0.00</div>
+                </div>
+            </div>
+            <div class="summary-card balance">
+                <div class="card-icon">💎</div>
+                <div class="card-content">
+                    <h3>Balance</h3>
+                    <div class="amount" id="balance">₹0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Overview Section -->
+        <div class="monthly-section">
+            <div class="monthly-header">
+                <div class="monthly-title-wrapper">
+                    <h2>📅 Monthly Overview</h2>
+                    <p class="click-hint">👆 Click on any month to see detailed breakdown</p>
+                </div>
+                <div class="year-selector">
+                    <button class="year-btn arrow-left" onclick="changeYear(-1)" title="Previous Year"></button>
+                    <span id="selectedYear">2024</span>
+                    <button class="year-btn arrow-right" onclick="changeYear(1)" title="Next Year"></button>
+                </div>
+            </div>
+            
+            <!-- Monthly Chart -->
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <div class="chart" id="monthlyChart"></div>
+                    <div class="chart-labels" id="chartLabels"></div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color income-legend"></span>
+                        <span>Income</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color expense-legend"></span>
+                        <span>Expense</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Cards -->
+            <div class="monthly-cards" id="monthlyCards"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Add Transaction Form -->
+            <div class="form-section">
+                <h2>➕ Add Transaction</h2>
+                <form id="transactionForm">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="description">Description</label>
+                            <input type="text" id="description" placeholder="e.g., Grocery shopping" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <input type="number" id="amount" placeholder="0.00" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Type</label>
+                            <select id="type" required>
+                                <option value="expense">Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <optgroup label="Expenses">
+                                    <option value="Food">🍔 Food</option>
+                                    <option value="Transport">🚗 Transport</option>
+                                    <option value="Shopping">🛒 Shopping</option>
+                                    <option value="Entertainment">🎬 Entertainment</option>
+                                    <option value="Bills">📄 Bills</option>
+                                    <option value="Health">🏥 Health</option>
+                                    <option value="Education">📚 Education</option>
+                                    <option value="Rent">🏠 Rent</option>
+                                </optgroup>
+                                <optgroup label="Income">
+                                    <option value="Salary">💼 Salary</option>
+                                    <option value="Freelance">💻 Freelance</option>
+                                    <option value="Investment">📊 Investment</option>
+                                    <option value="Gift">🎁 Gift</option>
+                                </optgroup>
+                                <optgroup label="Other">
+                                    <option value="Other">📌 Other</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Add Transaction</button>
+                        <button type="button" class="btn-secondary" onclick="exportToCSV()">📥 Export</button>
+                        <button type="button" class="btn-danger" onclick="clearAllData()">🗑️ Clear</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Transactions List -->
+            <div class="transactions">
+                <div class="transactions-header">
+                    <h2>📋 Transaction History</h2>
+                </div>
+
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Search transactions..." onkeyup="searchTransactions()">
+                </div>
+                
+                <!-- Month Filter -->
+                <div class="month-filter">
+                    <label for="monthFilter">📅 Filter by Month:</label>
+                    <select id="monthFilter" onchange="filterByMonth()">
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+
+                <!-- Type Filter Buttons -->
+                <div class="filter-section">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="income">Income</button>
+                    <button class="filter-btn" data-filter="expense">Expenses</button>
+                </div>
+
+                <div class="transaction-list" id="transactionList">
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>No transactions yet. Add your first transaction above!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="category-section">
+            <h2>📊 Category Breakdown (This Month)</h2>
+            <div class="category-grid" id="categoryBreakdown"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>💰 Personal Expense Tracker</p>
+            <p class="footer-note">Your data is saved securely</p>
+        </footer>
+    </div>
+
+    <!-- Monthly Breakdown Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">📅 January 2024 - Breakdown</h2>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Modal Summary -->
+                <div class="modal-summary" id="modalSummary"></div>
+
+                <!-- Tabs -->
+                <div class="modal-tabs">
+                    <button class="modal-tab active" data-tab="expenses" onclick="switchModalTab('expenses')">📉 Expenses</button>
+                    <button class="modal-tab" data-tab="income" onclick="switchModalTab('income')">📈 Income</button>
+                    <button class="modal-tab" data-tab="transactions" onclick="switchModalTab('transactions')">📋 All</button>
+                </div>
+
+                <!-- Expenses Tab -->
+                <div class="modal-tab-content active" id="expensesTab">
+                    <div class="modal-section">
+                        <h3>💸 Expense Breakdown by Category</h3>
+                        <div class="modal-categories" id="modalExpenseCategories"></div>
+                    </div>
+                    <div class="modal-section">
+                        <h3>📊 Expense Distribution</h3>
+                        <div class="pie-chart-container" id="expensePieChart"></div>
+                    </div>
+                    <div class="modal-section">
+                        <h3>📝 Expense Transactions</h3>
+                        <div class="modal-transactions" id="modalExpenseTransactions"></div>
+                    </div>
+                </div>
+
+                <!-- Income Tab -->
+                <div class="modal-tab-content" id="incomeTab">
+                    <div class="modal-section">
+                        <h3>💰 Income Breakdown by Category</h3>
+                        <div class="modal-categories" id="modalIncomeCategories"></div>
+                    </div>
+                    <div class="modal-section">
+                        <h3>📊 Income Distribution</h3>
+                        <div class="pie-chart-container" id="incomePieChart"></div>
+                    </div>
+                    <div class="modal-section">
+                        <h3>📝 Income Transactions</h3>
+                        <div class="modal-transactions" id="modalIncomeTransactions"></div>
+                    </div>
+                </div>
+
+                <!-- All Transactions Tab -->
+                <div class="modal-tab-content" id="transactionsTab">
+                    <div class="modal-section">
+                        <h3>📋 All Transactions This Month</h3>
+                        <div class="modal-transactions" id="modalAllTransactions"></div>
+                    </div>
+                </div>
+
+                <!-- Daily Breakdown -->
+                <div class="modal-section">
+                    <h3>📅 Daily Spending Pattern</h3>
+                    <div class="daily-chart" id="dailyChart"></div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="modal-section">
+                    <h3>📈 Statistics</h3>
+                    <div class="modal-stats" id="modalStats"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="exportMonthToCSV()">📥 Export Month</button>
+                <button class="btn-primary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
